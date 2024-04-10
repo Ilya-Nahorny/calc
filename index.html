@@ -3,46 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="./react.js"></script>
-  <script src="./react-dom.js"></script>
-  <script src="./calc-app.js"></script>
+  <!-- <script src="./react.js"></script>
+  <script src="./react-dom.js"></script> -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script type="module" src="./dist/main.js"></script>
 
   <title>calc</title>
 </head>
 <body>
   <div class="calculator" id="calc-app">
-    
-       <h1>Kalkulator kosztów remontu</h1>
-      
-      <form id="calculatorForm">
-        <label for="category">Kategoria cenowa:</label>
-        <select id="category" name="category">
-          <option value="Podstawowa">Podstawowa</option>
-          <option value="Standardowa">Standardowa</option>
-          <option value="Premium">Premium</option>
-        </select>
-        <br>
-        
-        <label for="room">Wybierz pomieszczenie:</label>
-        <select id="room" name="room">
-          <option value="Salon">Salon</option>
-          <option value="Sypialnia">Sypialnia</option>
-          <option value="Łazienka">Łazienka</option>
-          <option value="Kuchnia">Kuchnia</option>
-        </select>
-        <label for="area">Powierzchnia (m<sup>2</sup>):</label>
-        <input type="number" id="area" name="area" step="0.01">
-        <br>
-        
-    
-        
-        <button type="button" id="addRoom">Dodaj pomieszczenie</button>
-        <button type="submit">Zakończ rachunek</button>
-      </form>
-    
-      <div id="result"></div>
-   
-    
-    </div>
+  </div>
+
 </body>
 </html>
