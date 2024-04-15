@@ -160,30 +160,30 @@ const Calculator = () => {
   const [square, setSquare] = React.useState([0,0,0]);
 
   const [totalCost, setTotalCost] = React.useState(0);
-  const selectedRoomsArray = [];
+  const selectedRoomsObj = {};
   let cost = 0; 
 
   // Функция для фильтрации материалов
   const filterMaterials = (roomType) => {
-
     const materialsList = data.materials
       .filter(material => material.category === priceCategory)
       .filter(material => material.rooms.includes(roomType));
       
-    setFilteredMaterials(materialsList);
-
-    console.log(materialsList);
-
+    setFilteredMaterials( ...filteredMaterials, materialsList);
+    // console.log(filteredMaterials);
   }
-
 
   const areaCalc = (value) => {
     let podlogaArea = parseFloat(value);
     let scianyArea = value * 4;
     let sufitArea = value;
 
-    setSquare([podlogaArea, scianyArea, sufitArea])
+    setSquare([podlogaArea, scianyArea, sufitArea]);
   }
+
+  React.useEffect(() => {
+    console.log(filteredMaterials);
+  }, [filteredMaterials]);
 
   const handleFloorAreaChange = (room, value) => {
     const updatedRoomMaterials = { ...roomMaterials };
@@ -210,7 +210,7 @@ const Calculator = () => {
               </ul>
             </div>
         )}
-        {priceCategory && !addRoom && !addArea &&(
+        {priceCategory && !addRoom && !addArea && !addMaterials && (
           <div className="roomSelect" rooms={data.rooms}>
             {!addRoom && (
             <button
@@ -224,19 +224,81 @@ const Calculator = () => {
           data.rooms.map((room, index) => (
             <li key={index}>
               <button onClick={(e)=>{
-                setAddRoom(false);
-                setAddArea(true);
-                filterMaterials(e.target.innerText);
+                const roomType = e.target.innerText;
+                  const materialsList = data.materials
+                  .filter(material => material.category === priceCategory)
+                  .filter(material => material.rooms.includes(roomType));
+                  
+                  // Создаем новый объект
+                  const roomName = { [roomType]: materialsList };
+                  
+                  // Добавляем новый объект в filteredMaterials
+                  setFilteredMaterials([...filteredMaterials, roomName]);
+
+                  setAddRoom(false);
+                  // filterMaterials(e.target.innerText);
+                  setAddMaterials(true);
+                  // selectedRoomsObj[room] = {};                
                 }}>
                 {room}
               </button>
             </li>
           ))
         )}
-        {addArea && (
+
+        { addMaterials && (
+          <div>
+            <h5>Выберите материалы для Пола</h5>
+            <ul>
+
+              {filteredMaterials.filter(material => material.surfaces.includes("Podłoga")).map((material, index) => (
+                <li key={index}>
+                  <button onClick={(e)=>{
+                    const clickedMaterial = e.target.innerText; // Получаем значение выбранного материала
+                    const selectedMaterial = filteredMaterials.filter(material => material.name === clickedMaterial); // Фильтруем материалы
+                    setFilteredMaterials(selectedMaterial); // Обновляем состояние
+                  }}>
+                    {material.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <h5>Выберите материалы для Стен</h5>
+            <ul>
+              {filteredMaterials.filter(material => material.surfaces.includes("Ściany")).map((material, index) => (
+                <li key={index}>
+                  <button onClick={(e)=>{
+                    const wallOptions = filteredMaterials.filter(material => material.surfaces.includes("Ściany"));
+                    setFilteredMaterials(wallOptions);
+                  }}>
+                    {material.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <h5>Выберите материалы для Потолка</h5>
+            <ul>
+              {filteredMaterials.filter(material => material.surfaces.includes("Sufit")).map((material, index) => (
+                <li key={index}>
+                  <button onClick={(e)=>{
+                    const ceilingOptions = filteredMaterials.filter(material => material.surfaces.includes("Sufit"));
+                    setFilteredMaterials(ceilingOptions);
+                  }}>
+                    {material.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <button onClick={(e)=>{
+              setAddMaterials(false);
+              setAddArea(true);
+            }}>Potwierdz</button>
+          </div>
+        )}
+        {/* { addArea && !addMaterials && (
           <div>
             <label>Podaj powierzchnię :</label>
-            <input type="number" placeholder="Powierzchnia" onChange={(e)=>{areaCalc(e.target.value); }}/>
+            <input type="number" placeholder="Powierzchnia" onChange={(e)=>{areaCalc(e.target.value);}}/>
             <button onClick={(e)=>{setAddArea(false); }}>Submit</button>
             <div>
             <h4>podłoga: { square[0]  }</h4>
@@ -247,11 +309,8 @@ const Calculator = () => {
 
           </div>
           </div>
-        )}
-        
-        {
+        )} */}
 
-        }
       <div>
         <h2>Общая стоимость: 0 PLN</h2>
       </div>
